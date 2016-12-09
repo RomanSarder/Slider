@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="slider" class="slider">
+    <div class="thumb"></div>
+  </div>
+
+  <script>
+  function getCords(obj) {
+    var cords = obj.getBoundingClientRect();
+    var body = document.body;
+    var docEl = document.documentElement;
+    
+    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+    
+    var clientTop = docEl.clientTop || body.clientTop || 0;
+    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+    
+    var top = cords.top + scrollTop - clientTop;
+    var left = cords.left + scrollLeft - clientLeft;
+    
+    return {
+      top: top,
+      left: left
+    };
+  }
+  var thumb = document.querySelector('.thumb');
+  var slider = document.getElementById('slider');
+  var shiftX;
+  
+  thumb.onmousedown = function(e) {
+    var thumbCords = getCords(thumb);
+    shiftX = e.pageX - thumbCords.left;
+ 
+  var sliderCords = getCords(slider);
+  document.onmousemove = function(e) {
+  	var newLeft = e.pageX - shiftX - sliderCords.left;
+  	var rightEdge = slider.offsetWidth - thumb.offsetWidth;
+  	if (newLeft < 0) newLeft = 0;
+  	if (newLeft > rightEdge) newLeft = rightEdge; 
+    thumb.style.left = newLeft + 'px';
+  }
+
+  document.onmouseup = function() {
+    document.onmousemove = document.onmouseup = null;
+  }
+};
+  document.ondragstart = function() { 
+  	return false 
+  }
+  document.body.onselectstart = function() { 
+  	return false 
+  }
+ 
+  </script>
+
+</body>
+
+</html>
